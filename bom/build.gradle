@@ -1,0 +1,77 @@
+apply plugin: 'java-platform'
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+
+// allows inclusion of external boms
+javaPlatform {
+    allowDependencies()
+}
+
+/**
+ * Versions for multi module projects without a bom
+ */
+String icebergVersion = "0.2.5-RELEASE"
+String sparkVersion = "2.4.0"
+
+String slf4jVersion = "1.7.25"
+String slf4sVersion = "1.7.25"
+
+dependencies {
+    /** EXTERNAL BOMS **/
+    // aws java sdk1
+    api enforcedPlatform(group: 'com.amazonaws', name: 'aws-java-sdk-bom', version: '1.11.470')
+    // aws java sdk2
+    api enforcedPlatform(group: 'software.amazon.awssdk', name: 'bom', version: '2.15.28')
+
+    /** DPICEBERG CONSTRAINTS **/
+    constraints {
+        // iceberg dependencies TODO create virtual iceberg bom?
+        api group: 'org.apache.iceberg', name: 'iceberg-core', version: icebergVersion
+        api group: 'org.apache.iceberg', name: 'iceberg-hive', version: icebergVersion
+        api group: 'org.apache.iceberg', name: 'iceberg-spark2', version: icebergVersion
+        api group: 'org.apache.iceberg', name: 'iceberg-spark-runtime', version: icebergVersion
+        api group: 'org.apache.iceberg', name: 'iceberg-bundled-guava', version: icebergVersion
+
+        // spark2 dependencies TODO create virtual spark bom?
+        api group: 'org.apache.spark', name: 'spark-sql_2.11', version: sparkVersion
+        api group: 'org.apache.spark', name: 'spark-hive_2.11', version: sparkVersion
+        api group: 'org.apache.spark', name: 'spark-launcher_2.11', version: sparkVersion
+        api group: 'org.apache.spark', name: 'spark-catalyst_2.11', version: sparkVersion
+        api group: 'org.apache.spark', name: 'spark-streaming_2.11', version: sparkVersion
+        api group: 'org.apache.spark', name: 'spark-core_2.11', version: sparkVersion
+
+        /** S3A **/
+        api group: 'org.apache.hadoop', name: 'hadoop-aws', version: '2.8.4'
+
+        /** FIPS **/
+        api group: 'org.bouncycastle', name: 'bc-fips', version: '1.0.2'
+    }
+
+    /** UTILITY LIBRARIES **/
+    constraints {
+        /** CACHING **/
+        // almost no dependencies in this caching library
+        api group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
+
+        /** LOGGING **/
+        // slf4j
+        api group: 'org.slf4j', name: 'sl4fj-api', version: slf4jVersion
+
+        // slf4s
+        api group: 'org.slf4s', name: "slf4s-api_2.11", version: slf4sVersion
+        api group: 'org.slf4s', name: 'slf4s-api_2.12', version: slf4sVersion
+
+        // shims to slf4j
+        api group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: '2.14.0' //log4j2
+        api group: 'org.slf4j', name: 'log4j-over-slf4j', version: slf4jVersion // log4j1
+        api group: 'org.slf4j', name: 'jcl-over-slf4j', version: slf4jVersion // jakarta commons logging
+        api group: 'org.slf4j', name: 'jul-to-slf4j', version: slf4jVersion // java util logging
+    }
+
+    /** BOX ENVIRONMENT **/
+    constraints {
+        // vault access
+        api group: 'com.box.secrets', name: 'box-secrets-core_2.12', version: '0.1.1'
+        // DP tenancy model and scheduler interopability
+        api group: 'com.box', name: 'data-platform-model_2.12', version: '1.0.326'
+    }
+}

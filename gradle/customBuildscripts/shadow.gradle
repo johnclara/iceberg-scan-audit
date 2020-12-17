@@ -1,0 +1,7 @@
+/**
+ * Placeholder to help with shadowing.
+ *
+ * Not sure what to add here yet.
+ */
+
+apply plugin: 'com.github.johnrengelman.shadow'

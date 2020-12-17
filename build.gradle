@@ -1,0 +1,150 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url "https://box.jfrog.io/box/box-maven-releases"
+            credentials {
+                username "${artifactory_user}"
+                password "${artifactory_password}"
+            }
+        }
+        maven {
+            url "https://box.jfrog.io/box/box-maven-snapshots"
+            credentials {
+                username "${artifactory_user}"
+                password "${artifactory_password}"
+            }
+        }
+        maven {
+            url "https://box.jfrog.io/box/signedthirdpartymaven"
+            credentials {
+                username "${artifactory_user}"
+                password "${artifactory_password}"
+            }
+        }
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath group: 'org.sonarsource.scanner.gradle', name: 'sonarqube-gradle-plugin', version: sonarqubeVersion
+
+        //classpath "com.box.monaco:monaco-build-avoidance-plugin:${monacoFrameworkVersion}"
+
+        // TODO add github release tags
+        //classpath "com.netflix.nebula:nebula-release-plugin:${nebulaVersion}"
+
+        // TODO investigate
+        //api group: 'org.owasp', name: 'dependency-check-gradle', version: dependencyCheckVersion
+
+        // to sign dependencies before publish
+        classpath group: 'com.box.monaco', name: 'signature-verification', version: signatureVerificationVersion
+
+        // TODO see if needed
+        //classpath group: 'com.github.ben-manes', name: 'gradle-versions-plugin', version: benManesVersion
+
+        // to create chadow jars
+        classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: shadowVersion
+
+        // helps force everything to slf4j. this dependency is sketch and hasn't gotten updated in a year, but we can get rid of it
+        // Blog post: https://blog.gradle.org/addressing-logging-complexity-capabilities
+        // repo: https://github.com/ljacomet/logging-capabilities/tree/b5ce6bc1ff2a143b4fc8bc62af67d40231691b60
+        // it is used in java.gradle under the dependencies section
+        classpath group: 'dev.jacomet.gradle.plugins', name: 'logging-capabilities', version: loggingCapabilitiesVersion
+    }
+}
+
+/**
+ * Central location for compilation of plugins
+ */
+plugins {
+    id 'com.github.sherter.google-java-format' version "$googleJavaFormatVersion" apply false
+    id 'com.github.alisiikh.scalastyle' version "$scalaStyleVersion" apply false
+    id 'dev.jacomet.logging-capabilities' version "$loggingCapabilitiesVersion" apply false
+
+    id 'project-report'
+    id 'jacoco'
+    id 'org.sonarqube' version "$sonarqubeVersion"
+}
+
+apply from: "${rootDir}/gradle/customBuildscripts/util.gradle"
+
+allprojects {
+    // plugins for root and sub projects
+    apply plugin: 'idea'
+    group 'com.box.dataplatform.iceberg'
+    version = rootProject.version
+
+    // creates an "allDeps" task to show dependencies for all subprojects
+    task allDeps(type: DependencyReportTask) {}
+}
+/** JACOCO AND SONARQUBE **/
+// Following this guide: https://cristian.io/post/sonar-coverage/
+
+// path for all test coverage. Needs to be accessible by all projects so its in gradle.ext
+gradle.ext.allTestCoverageFile = "$buildDir/jacoco/allTestCoverage.exec"
+
+/* This is a container for java projects for use by jacoco/sonarqube top level aggregate tasks
+ * java projects should register themselves in this list
+ */
+gradle.ext.javaProjects = []
+
+
+evaluationDependsOnChildren()
+jacoco {
+    toolVersion = "${jacocoVersion}"
+}
+
+def getProjects(String s) {
+    logger.info("Getting projects" + s + ":" + gradle.ext.javaProjects)
+    return gradle.ext.javaProjects
+}
+
+task jacocoMergeAll(type: JacocoMerge) {
+    dependsOn getProjects("0").jacocoTestReport
+    destinationFile = file(gradle.ext.allTestCoverageFile)
+    executionData = files(files(getProjects("1").jacocoTestReport.executionData).findAll { it.exists() })
+}
+
+task jacocoAggregateReport(type: JacocoReport, group: 'Coverage reports') {
+    dependsOn(jacocoMergeAll)
+    description = 'Generates an aggregate report from all subprojects'
+
+    additionalSourceDirs.from = files(gradle.ext.javaProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories.from = files(gradle.ext.javaProjects.sourceSets.main.allSource.srcDirs)
+    classDirectories.from = files(gradle.ext.javaProjects.sourceSets.main.output)
+    executionData.from = files(gradle.ext.allTestCoverageFile)
+
+    reports {
+        html.enabled = true
+        xml.enabled = false
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "${artifactId}"
+        property "sonar.projectName", "${projectName}"
+        property "sonar.jacoco.reportPaths", gradle.ext.allTestCoverageFile
+    }
+}
+project.tasks["sonarqube"].dependsOn jacocoMergeAll
+
+
+// adds all subprojects to a report generated at root
+dependencyReport {
+    projects = project.allprojects
+}
+
+propertyReport {
+    projects = project.allprojects
+}
+
+taskReport {
+    projects = project.allprojects
+}
+
+htmlDependencyReport {
+    projects = project.allprojects
+}
+

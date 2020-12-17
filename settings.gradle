@@ -1,0 +1,141 @@
+// used for symlinking
+import java.nio.file.*
+
+include 'bom'
+include 'test-bom'
+
+include 'dp-util'
+include 'dp-test-util'
+include 'box-crypto'
+
+class AwsModule {
+    String baseName
+    String sdkVersion = null
+    List<String> scalaVersions = null
+}
+
+List<AwsModule> awsModules = [
+        new AwsModule(baseName: 'api'),
+        new AwsModule(baseName: 'skynet', scalaVersions: ["2.12"]),
+
+        new AwsModule(baseName: 'core', sdkVersion: "sdk1"),
+        new AwsModule(baseName: 'kms', sdkVersion: "sdk1"),
+        new AwsModule(baseName: 'dynamodb', sdkVersion: "sdk1"),
+        new AwsModule(baseName: 's3', sdkVersion: "sdk1"),
+
+        new AwsModule(baseName: 'core', sdkVersion: "sdk2"),
+        new AwsModule(baseName: 'async-core', sdkVersion: "sdk2"),
+        new AwsModule(baseName: 'dynamodb', sdkVersion: "sdk2"),
+        new AwsModule(baseName: 's3', sdkVersion: "sdk2"),
+]
+
+class DPIcebergModule {
+    String baseName
+    List<String> scalaVersions = null
+    Boolean separateTestModule = false
+}
+
+List<DPIcebergModule> dpicebergModules = [
+        new DPIcebergModule(baseName: "api"),
+        new DPIcebergModule(baseName: "crypto"),
+
+        new DPIcebergModule(baseName: "s3a"),
+        new DPIcebergModule(baseName: "core"),
+
+        new DPIcebergModule(baseName: "testkit"),
+
+        new DPIcebergModule(baseName: "control-plane", scalaVersions: ["2.12"]),
+        new DPIcebergModule(baseName: "control-plane-shaded", scalaVersions: ["2.12"]),
+
+        new DPIcebergModule(baseName: "spark2", scalaVersions: ["2.11"], separateTestModule: true),
+        new DPIcebergModule(baseName: "client"),
+]
+
+void includeCrossBuildModules(
+        String baseModuleName,
+        String relativePath,
+        List<String> scalaVersions,
+        Boolean useSymlinks) {
+
+    if (scalaVersions == null) {
+        def moduleName = baseModuleName
+
+        include moduleName
+        project(":${moduleName}").setProjectDir(new File(settingsDir, relativePath))
+    } else {
+        def moduleNeedsSymlink = useSymlinks && scalaVersions.size() > 1
+        scalaVersions.each { scalaVersion ->
+            def moduleName = baseModuleName + "_" + scalaVersion
+
+            /**
+             * If useSymlinks, add a symlink from an adjacent file with version to the main directory.
+             * This tricks intellij into thinking that the modules don't have overlapping content roots.
+             * Without this, intellij will just get rid of some of the modules.
+             *
+             * If not useSymlinks, delete all the existing ones
+             */
+            def symlinkPath = relativePath + "_" + scalaVersion
+            def link = settingsDir.toPath().resolve(symlinkPath)
+
+            if (moduleNeedsSymlink && scalaVersions.size() > 1 && !Files.isSymbolicLink(link)) {
+                Files.createSymbolicLink(link, settingsDir.toPath().resolve(relativePath))
+            } else if (!moduleNeedsSymlink && Files.exists(link) && Files.isSymbolicLink(link)) {
+                Files.delete(link)
+            }
+
+            def contentRoot = (moduleNeedsSymlink) ? symlinkPath : relativePath
+
+            include moduleName
+            project(":${moduleName}").setProjectDir(new File(settingsDir, contentRoot))
+        }
+    }
+
+}
+
+/**
+ * Using symlinks will let intellij process this repo.
+ * Flag that you want symlinks by touching use_symlinks in the root directory.
+ */
+Boolean useSymlinks = Files.exists(settingsDir.toPath().resolve("use_symlinks"))
+
+awsModules.each { awsModule ->
+    def prefix = "aws-"
+    def suffix = (awsModule.sdkVersion != null) ? ("-" + awsModule.sdkVersion) : ""
+    def moduleName = prefix + awsModule.baseName + suffix
+    def relativePath = "aws/" + ((awsModule.sdkVersion != null) ? awsModule.sdkVersion + "/" : "") + awsModule.baseName
+
+    includeCrossBuildModules(
+            moduleName,
+            relativePath,
+            awsModule.scalaVersions,
+            useSymlinks)
+}
+
+dpicebergModules.each { dpicebergModule ->
+    def prefix = "dpiceberg-"
+    def moduleName = prefix + dpicebergModule.baseName
+    def relativePath = dpicebergModule.baseName
+
+    includeCrossBuildModules(
+            moduleName,
+            relativePath,
+            dpicebergModule.scalaVersions,
+            useSymlinks)
+
+    if (dpicebergModule.separateTestModule) {
+        def testSuffix = "-integration-tests"
+        def testModuleName = moduleName + testSuffix
+        def testRelativePath = dpicebergModule.baseName + testSuffix
+        includeCrossBuildModules(
+                testModuleName,
+                testRelativePath,
+                dpicebergModule.scalaVersions,
+                useSymlinks)
+    }
+}
+
+includeCrossBuildModules(
+        'dpiceberg-client-integration-tests',
+        'client-integration-tests',
+        ['2.12'],
+        useSymlinks)

@@ -1,0 +1,1591 @@
+{
+  "type" : "record",
+  "name" : "NewsroomEvent",
+  "namespace" : "com.box.newsroom",
+  "fields" : [ {
+    "name" : "eventSource",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "EventSource",
+      "namespace" : "com.box.analytics",
+      "fields" : [ {
+        "name" : "created",
+        "type" : [ "null", "long" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      }, {
+        "name" : "hostname",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      }, {
+        "name" : "datacenter",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      }, {
+        "name" : "origin",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      } ]
+    } ],
+    "default" : null,
+    "system" : {
+      "required" : true
+    }
+  }, {
+    "name" : "ownerEnterprise",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "system" : {
+      "required" : true,
+      "filterable" : true
+    }
+  }, {
+    "name" : "ownerEnterpriseAdmin",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AuditEventUser",
+      "fields" : [ {
+        "name" : "user",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "userAsLong",
+        "type" : [ "null", "long" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "email",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      }, {
+        "name" : "login",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "runmodeGroups",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "enterprise",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "userType",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      } ]
+    } ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "actorUser",
+    "type" : [ "null", "AuditEventUser" ],
+    "default" : null,
+    "system" : {
+      "required" : true
+    }
+  }, {
+    "name" : "actorUserIpAddress",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "required" : true,
+      "filterable" : true
+    },
+    "es" : {
+      "type" : "ip"
+    }
+  }, {
+    "name" : "userAgent",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "filterable" : true
+    }
+  }, {
+    "name" : "eventType",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AuditEventType",
+      "fields" : [ {
+        "name" : "id",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true,
+          "filterable" : true
+        }
+      }, {
+        "name" : "category",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      }, {
+        "name" : "operation",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "required" : true
+        }
+      } ]
+    } ],
+    "default" : null,
+    "system" : {
+      "required" : true
+    }
+  }, {
+    "name" : "createdAt",
+    "type" : [ "null", "long" ],
+    "default" : null,
+    "system" : {
+      "required" : true,
+      "filterable" : true,
+      "sortable" : true,
+      "partitioningKey" : true,
+      "partitioner" : "com.box.analytics.data.partitioning.TimeIntervalPartitioner"
+    },
+    "timePartitioning" : {
+      "interval" : "day",
+      "format" : "yyyy-MM-dd"
+    },
+    "es" : {
+      "type" : "date"
+    }
+  }, {
+    "name" : "guid",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "required" : true,
+      "filterable" : true,
+      "primaryKey" : true
+    }
+  }, {
+    "name" : "traceId",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "filterable" : true
+    }
+  }, {
+    "name" : "runmode",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "filterable" : true
+    }
+  }, {
+    "name" : "requestId",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "required" : true,
+      "filterable" : true
+    }
+  }, {
+    "name" : "sessionId",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : {
+      "filterable" : true
+    }
+  }, {
+    "name" : "sourceType",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "deviceTypeName",
+    "type" : [ "null", "string" ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "service",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "Service",
+      "fields" : [ {
+        "name" : "service",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : {
+          "filterable" : true
+        }
+      }, {
+        "name" : "name",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "filterable" : true
+        }
+      }, {
+        "name" : "apiKey",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : {
+          "filterable" : true
+        }
+      } ]
+    } ],
+    "default" : null,
+    "system" : {
+      "filterable" : true
+    }
+  }, {
+    "name" : "instantLoginUser",
+    "type" : [ "null", "AuditEventUser" ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "fanoutSourceEnterpriseId",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "logSlaveEventId",
+    "type" : [ "null", "long" ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "categoryDetails",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AuditEventCategoryDetails",
+      "fields" : [ {
+        "name" : "collabEventDetails",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "CollabEventDetails",
+          "fields" : [ {
+            "name" : "collab",
+            "type" : [ "null", "int" ],
+            "default" : null,
+            "system" : {
+              "required" : true,
+              "filterable" : true
+            }
+          }, {
+            "name" : "item",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventItem",
+              "fields" : [ {
+                "name" : "item",
+                "type" : [ "null", {
+                  "type" : "record",
+                  "name" : "Item",
+                  "namespace" : "com.box.filesystem",
+                  "fields" : [ {
+                    "name" : "file",
+                    "type" : [ "null", "long" ],
+                    "default" : null,
+                    "system" : {
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "folder",
+                    "type" : [ "null", "long" ],
+                    "default" : null,
+                    "system" : {
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "webLink",
+                    "type" : [ "null", "long" ],
+                    "default" : null,
+                    "system" : {
+                      "filterable" : true
+                    }
+                  } ]
+                } ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "sharedName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "path",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "pathIds",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "parentFolder",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "parentFolderName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "fileVersion",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "size",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "fileCount",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "fileHash",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "hashType",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "state",
+            "type" : [ "null", "int" ],
+            "default" : null,
+            "system" : {
+              "required" : true,
+              "filterable" : true
+            }
+          }, {
+            "name" : "inviteeRole",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "required" : true,
+              "filterable" : true
+            }
+          }, {
+            "name" : "itemOwner",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "inviterUser",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "invitee",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "CollabInvitee",
+              "namespace" : "com.box.collab",
+              "fields" : [ {
+                "name" : "user",
+                "type" : [ "null", "com.box.newsroom.AuditEventUser" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "group",
+                "type" : [ "null", {
+                  "type" : "record",
+                  "name" : "AuditEventGroup",
+                  "namespace" : "com.box.newsroom",
+                  "fields" : [ {
+                    "name" : "group",
+                    "type" : [ "null", "int" ],
+                    "default" : null,
+                    "system" : {
+                      "required" : true,
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "groupAsLong",
+                    "type" : [ "null", "long" ],
+                    "default" : null,
+                    "system" : {
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "name",
+                    "type" : [ "null", "string" ],
+                    "default" : null,
+                    "system" : {
+                      "required" : true,
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "invitabilityLevel",
+                    "type" : [ "null", "int" ],
+                    "default" : null,
+                    "system" : { }
+                  }, {
+                    "name" : "memberViewabilityLevel",
+                    "type" : [ "null", "int" ],
+                    "default" : null,
+                    "system" : { }
+                  } ]
+                } ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "nonRegisteredUser",
+                "type" : [ "null", {
+                  "type" : "record",
+                  "name" : "AuditEventNonRegisteredUser",
+                  "namespace" : "com.box.newsroom",
+                  "fields" : [ {
+                    "name" : "nonRegisteredUser",
+                    "type" : [ "null", "int" ],
+                    "default" : null,
+                    "system" : {
+                      "required" : true,
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "nonRegisteredUserAsLong",
+                    "type" : [ "null", "long" ],
+                    "default" : null,
+                    "system" : {
+                      "filterable" : true
+                    }
+                  }, {
+                    "name" : "email",
+                    "type" : [ "null", "string" ],
+                    "default" : null,
+                    "system" : {
+                      "required" : true,
+                      "filterable" : true
+                    }
+                  } ]
+                } ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "autoAccepted",
+            "type" : [ "null", "boolean" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "forceAccepted",
+            "type" : [ "null", "boolean" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldInviteeRole",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "expiresAt",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "collabIdLong",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : {
+              "required" : true,
+              "filterable" : true
+            }
+          } ]
+        } ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "enterpriseEventDetails",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "EnterpriseEventDetails",
+          "fields" : [ {
+            "name" : "user",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldSettings",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "newSettings",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "workflowPolicy",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventWorkflowPolicy",
+              "fields" : [ {
+                "name" : "workflowPolicy",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "type",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "description",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "filterStartedAt",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "filterEndedAt",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "isOngoing",
+                "type" : [ "null", "boolean" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "originalName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "originalDescription",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "releaseNotes",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "originalReleaseNotes",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "workflowPolicyAssignment",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventWorkflowPolicyAssignment",
+              "fields" : [ {
+                "name" : "workflowPolicyAssignment",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "workflowPolicy",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "applyToType",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "applyToIdAsString",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "applyToId",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "deletionMethod",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "device",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventDevice",
+              "fields" : [ {
+                "name" : "deviceId",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "deviceTypeId",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "metadataTemplate",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventMetadataTemplate",
+              "fields" : [ {
+                "name" : "id",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "type",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "operationParams",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "templateKey",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "scope",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "storagePolicyId",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "workflowPolicyViolator",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "shieldAlert",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "ShieldAlert",
+              "fields" : [ {
+                "name" : "ruleCategory",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "ruleId",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "ruleName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "riskScore",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "alertSummary",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "alertId",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "priority",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "user",
+                "type" : [ "null", "AuditEventUser" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "createdAt",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { },
+                "es" : {
+                  "type" : "date"
+                }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "legalHoldExport",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventLegalHoldExport",
+              "fields" : [ {
+                "name" : "id",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "filters",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          } ]
+        } ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "itemEventDetails",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "ItemEventDetails",
+          "fields" : [ {
+            "name" : "item",
+            "type" : [ "null", "AuditEventItem" ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "owner",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : {
+              "required" : true
+            }
+          }, {
+            "name" : "uploader",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "policyViolator",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "workflowPolicyViolator",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldName",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "oldParentFolder",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "oldParentFolderName",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "oldOwner",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "workflowPolicy",
+            "type" : [ "null", "AuditEventWorkflowPolicy" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "workflowPolicyAssignment",
+            "type" : [ "null", "AuditEventWorkflowPolicyAssignment" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "taskAssigner",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "taskAssignee",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "task",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventTask",
+              "fields" : [ {
+                "name" : "due",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "isCompleted",
+                "type" : [ "null", "boolean" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "status",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "description",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "id",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "assigneeMessage",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "shared",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventShared",
+              "fields" : [ {
+                "name" : "sharedId",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "vanityName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "sharedName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "passwordSet",
+                "type" : [ "null", "boolean" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "accessLevel",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "createdAt",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : { },
+                "es" : {
+                  "type" : "date"
+                }
+              }, {
+                "name" : "accessFromShared",
+                "type" : [ "null", "boolean" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "quarantine",
+            "type" : [ "null", "int" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "quarantineAsLong",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "deleteAt",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "unshareAt",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "metadata",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventMetadata",
+              "fields" : [ {
+                "name" : "type",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "operationParams",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "metadataCascadePolicy",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventMetadataCascadePolicy",
+              "fields" : [ {
+                "name" : "owner",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "scope",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "templateKey",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "type",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "ekmId",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "anomalousActivity",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventAnomalousActivity",
+              "fields" : [ {
+                "name" : "anomalousType",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "riskScore",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "activityDetails",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "topLevelFolder",
+            "type" : [ "null", "AuditEventItem" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "securityInformation",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventSecurityInformation",
+              "fields" : [ {
+                "name" : "accessFromSharedObject",
+                "type" : [ "null", "AuditEventShared" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "parentFolderIds",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "skillInvocation",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "SkillInvocation",
+              "fields" : [ {
+                "name" : "skillInvocationId",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "serviceId",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "skillId",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "status",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "updatedAt",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "usageUnit",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              }, {
+                "name" : "usageValue",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "filterable" : true
+                }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "driveEvent",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "DriveEventDetails",
+              "fields" : [ {
+                "name" : "deviceId",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "deviceName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "platform",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "processName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true
+                }
+              }, {
+                "name" : "reason",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "accessTokenIdentifier",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : {
+              "filterable" : true
+            }
+          }, {
+            "name" : "commentMessage",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          } ]
+        } ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "userEventDetails",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "UserEventDetails",
+          "fields" : [ {
+            "name" : "user",
+            "type" : [ "null", "AuditEventUser" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "group",
+            "type" : [ "null", "AuditEventGroup" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "emailAlias",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldEmailAlias",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldNotificationEmail",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "newNotificationEmail",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "emailAliasAddedViaSso",
+            "type" : [ "null", "boolean" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "adminPermissions",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldEnterprise",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventEnterpriseIdentifier",
+              "fields" : [ {
+                "name" : "enterprise",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "enterpriseAsLong",
+                "type" : [ "null", "long" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "newEnterprise",
+            "type" : [ "null", "AuditEventEnterpriseIdentifier" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "oldDbValues",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "newDbValues",
+            "type" : [ "null", "string" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "isDeactivatedUser",
+            "type" : [ "null", "boolean" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "device",
+            "type" : [ "null", "AuditEventDevice" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "termsOfService",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventTermsOfService",
+              "fields" : [ {
+                "name" : "termsOfService",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "enterprise",
+                "type" : [ "null", "int" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "isCreatedViaCollabInvite",
+            "type" : [ "null", "boolean" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "anomalousActivity",
+            "type" : [ "null", "AuditEventAnomalousActivity" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "task",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventWorkflowTask",
+              "fields" : [ {
+                "name" : "dueAt",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "completedAt",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "assignee",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "status",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "references",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "trigger",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventWorkflowTrigger",
+              "fields" : [ {
+                "name" : "triggerType",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "scope",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              }, {
+                "name" : "outcome",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "createdService",
+            "type" : [ "null", "Service" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "storagePolicyId",
+            "type" : [ "null", "long" ],
+            "default" : null,
+            "system" : { }
+          }, {
+            "name" : "automation",
+            "type" : [ "null", {
+              "type" : "record",
+              "name" : "AuditEventWorkflowAutomation",
+              "fields" : [ {
+                "name" : "id",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "name",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : {
+                  "required" : true,
+                  "filterable" : true
+                }
+              }, {
+                "name" : "originalName",
+                "type" : [ "null", "string" ],
+                "default" : null,
+                "system" : { }
+              } ]
+            } ],
+            "default" : null,
+            "system" : { }
+          } ]
+        } ],
+        "default" : null,
+        "system" : { }
+      } ]
+    } ],
+    "default" : null,
+    "system" : {
+      "required" : true
+    }
+  }, {
+    "name" : "affectedObject",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AffectedObject",
+      "fields" : [ {
+        "name" : "type",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "id",
+        "type" : [ "null", "int" ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "idAsLong",
+        "type" : [ "null", "long" ],
+        "default" : null,
+        "system" : { }
+      } ]
+    } ],
+    "default" : null,
+    "system" : { }
+  }, {
+    "name" : "platformEventDetails",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "PlatformEventDetails",
+      "fields" : [ {
+        "name" : "requestId",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "responseCode",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : { }
+      }, {
+        "name" : "responseMessage",
+        "type" : [ "null", "string" ],
+        "default" : null,
+        "system" : { }
+      } ]
+    } ],
+    "default" : null,
+    "system" : { }
+  } ]
+}

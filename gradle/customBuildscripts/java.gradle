@@ -1,0 +1,93 @@
+/**
+ * Adds helper methods for libraries depending on
+ */
+
+apply from: "${rootDir}/gradle/customBuildscripts/util.gradle"
+apply plugin: 'java-library'
+apply plugin: 'com.github.sherter.google-java-format'
+apply plugin: 'dev.jacomet.logging-capabilities'
+apply plugin: 'jacoco'
+apply plugin: 'org.sonarqube'
+
+// register as a java project for use in the root project
+gradle.ext.javaProjects.add(project)
+
+/*** DEFAULT DEPENDENCIES ***/
+
+dependencies {
+    // constrains and provides recommendations for dependency versions
+    implementation enforcedPlatform(project(':bom'))
+
+    /**
+     * Common testing framework
+     */
+    // provides recommendations for test dependency versions
+    testImplementation platform(project(':test-bom'))
+
+    // helper methods (eg SerializableUtil)
+    testImplementation project(':dp-test-util')
+
+    testImplementation group: 'junit', name: 'junit'
+    testImplementation group: 'org.mockito', name: 'mockito-core'
+
+    // default test logging implementation.
+    // The testkit provides a default logback.xml but non dependent libraries can provide their own
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic'
+}
+
+loggingCapabilities {
+    enforceLogback() // forces everything to slf4j bridges and chooses logback as the implementation
+}
+
+configurations {
+    all {
+        // hijacks logging & general spring hate
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'org.springframework', module: 'spring-jcl'
+    }
+}
+
+/*** JAVA VERSIONS AND COMPILING ***/
+sourceCompatibility = 8
+targetCompatibility = 8
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+/*** TEST CONFIG AND CODE COVERAGE***/
+
+test {
+    testLogging {
+        // tells gradle to spit out all streams TODO make this configurable since it's super noisy
+        showStandardStreams = true
+    }
+    testLogging {
+        events "skipped", "failed"
+        exceptionFormat "full"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPaths", gradle.ext.allTestCoverageFile
+    }
+}
+
+//project.tasks["sonarqube"].dependsOn rootProject.tasks["jacocoMergeAll"]
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+/*** JAVA CONFIG FOR INTELLIJ ***/
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

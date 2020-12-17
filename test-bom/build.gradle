@@ -1,0 +1,19 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+apply plugin: 'java-platform'
+
+String specs2Version = '4.10.0'
+
+dependencies {
+    constraints {
+        api group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+        api group: 'junit', name: 'junit', version: '4.12'
+        api group: 'org.mockito', name: 'mockito-core', version: '2.7.22'
+
+        api group: 'org.specs2', name: 'specs2-core_2.11', version: specs2Version
+        api group: 'org.specs2', name: 'specs2-mock_2.11', version: specs2Version
+        api group: 'org.specs2', name: 'specs2-junit_2.11', version: specs2Version
+        api group: 'org.specs2', name: 'specs2-core_2.12', version: specs2Version
+        api group: 'org.specs2', name: 'specs2-mock_2.12', version: specs2Version
+        api group: 'org.specs2', name: 'specs2-junit_2.12', version: specs2Version
+    }
+}

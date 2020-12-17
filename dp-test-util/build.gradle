@@ -1,0 +1,7 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
+
+dependencies {
+    api platform(project(':test-bom'))
+    api group: 'junit', name: 'junit'
+    api group: 'org.mockito', name: 'mockito-core'
+}

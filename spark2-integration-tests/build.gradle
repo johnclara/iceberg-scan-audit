@@ -1,0 +1,9 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/integration-tests.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/specs2.gradle"
+
+dependencies {
+    testCompile(project(":dpiceberg-spark2".scala()))
+
+    testCompile group: 'com.box.dataplatform', name: 'cdc-credence'.scala(), version: '0.11-SNAPSHOT'
+}

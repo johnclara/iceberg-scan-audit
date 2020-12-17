@@ -1,0 +1,114 @@
+/**
+ * Will automatically pull in the java buildscript.
+ *
+ * Adds helper methods for projects with scala dependencies.
+ */
+
+apply from: "${rootDir}/gradle/customBuildscripts/util.gradle"
+apply from: "${rootDir}/gradle/customBuildscripts/java.gradle"
+apply plugin: 'scala'
+apply plugin: 'com.github.alisiikh.scalastyle'
+
+/*** SET SCALA VERSION ***/
+
+static String getScalaShortVersion(String fullScalaVersion) {
+    return fullScalaVersion.startsWith('2.11') ? '2.11' : '2.12'
+}
+
+// This will check that the name of the project contains either 2.11 or 2.12. That overrides the default scala version (2.11).
+String allScalaVersions = properties.targetScalaVersions
+project.ext.scalaVersion = allScalaVersions.split(',').find {
+    name.contains(getScalaShortVersion(it))
+}
+
+if (project.ext.scalaVersion == null) {
+    throw new IllegalStateException("The project ${name} does not end with a suffix which " +
+            "matches one of the supported scala versions: ${properties.targetScalaVersions}")
+}
+
+// set a variable accessible by the main build.gradle to help find dependencies
+project.ext.scalaSuffix = '_' + getScalaShortVersion(project.ext.scalaVersion)
+
+// adds a helper.scala() function to java.util.String (this is similar to %% in sbt)
+String.metaClass.scala { -> delegate + project.ext.scalaSuffix }
+
+logger.info("Setting project ${name} scala version to ${project.ext.scalaVersion}")
+
+/*** DEFAULT DEPENDENCIES ***/
+dependencies {
+    /**
+     * I'm not super sure if this following part is necessary:
+     *
+     * The scala plugin relies on a zinc compiler to figure out what version of scala lib to use.
+     *
+     * It will dynamically check your dependencies for different scala versions and add them to your classpath.
+     * But I'm not sure if it checks for org.scala-lang.modules (or at least it's failing right now).
+     *
+     * This means your test dependencies must use the same scala version as the zinc org.scala-lang.modules
+     */
+    testCompile(group: 'org.scala-lang.modules', name: 'scala-xml'.scala()) {
+        version {
+            strictly '1.0.6'
+        }
+    }
+
+    /**
+     * If you forget to include scala-lang, then the plugin won't add anything to the classpath.
+     *
+     * So we automatically add it here.
+     */
+    implementation group: 'org.scala-lang', name: 'scala-library', version: project.ext.scalaVersion
+    implementation group: 'org.scala-lang', name: 'scala-reflect', version: project.ext.scalaVersion
+}
+
+/*** COMPILATION AND CROSS COMPILATION ***/
+
+/**
+ * Cross compiled scala builds share the same project repo, so build dirs
+ * are moved to the root build dir under the project name so they don't collide.
+ */
+buildDir = "${rootProject.buildDir}/${name}"
+
+/**
+ * This is needed to allow java and scala classes to depend on eachother in a single project
+ *
+ * It does this by telling the scala plugin to use both the java and scala files when compiling and
+ * telling the java plugin to not compile any files.
+ *
+ * I think it might mess up publishing source jars.
+ */
+sourceSets {
+    main {
+        java {
+            srcDirs = []
+        }
+        scala {
+            srcDirs "${projectDir}/src/main/java"
+        }
+    }
+    test {
+        java {
+            srcDirs = []
+        }
+        scala {
+            srcDirs "${projectDir}/src/test/java"
+        }
+    }
+}
+
+// Set default scala compile options TODO probably a cleaner way to do this
+compileScala.options.compilerArgs << "-Xlint:deprecation"
+
+tasks.withType(ScalaCompile) {
+    scalaCompileOptions.forkOptions.with {
+        memoryMaximumSize = '1g'
+        jvmArgs = ['-Xss256m']
+    }
+}
+
+/*** CODE STYLE ***/
+scalastyle {
+    scalaVersion = getScalaShortVersion(project.ext.scalaVersion)
+    scalastyleVersion = '1.1.0' // this was picked arbitrarily
+    config = rootProject.file("gradle/scalastyle_config.xml") // this was chosen arbitrarily
+}

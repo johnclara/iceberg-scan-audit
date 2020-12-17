@@ -1,0 +1,77 @@
+*.class
+
+# Heapdumps sometimes for some reason
+*.hprof
+
+# staging dirs
+s3tmp/*
+s3mock/*
+
+### For intellij fix ###
+*_2.12
+*_2.11
+use_symlinks
+
+### build-image ###
+latest-built-image.json
+.docker-gradle-cache/
+built-image.json
+
+### ephemeral builds ###
+deployment-config/
+ephemeral.json
+ephemeral.yml
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+.DS_Store
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Intellij ###
+*.iml
+*.ipr
+*.iws
+
+### Gradle ###
+.idea/
+.gradle/
+wrapper/
+
+### Build ###
+build/
+target/
+
+### Werk ###
+.werk/werk.log
+
+### Logs ###
+logs/*
+*.log
+
+## end2end test ##
+latest-built-image.json
+
+## job dsl ##
+jenkins/**/*.xml
+
+## spring boot ##
+out/
+
+## generated source ##
+src/generated
+
+## Jacoco Results ##
+Jacoco_Coverage.html
+
+metastore_db/

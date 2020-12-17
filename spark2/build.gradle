@@ -1,0 +1,16 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+
+dependencies {
+    // compile dependencies
+    compile project(':dpiceberg-core')
+
+    compile group: 'org.apache.iceberg', name: 'iceberg-spark2'
+    compile group: 'org.apache.spark', name: 'spark-sql'.scala()
+    compile group: 'org.apache.spark', name: 'spark-hive'.scala()
+    compile group: 'org.apache.spark', name: 'spark-launcher'.scala()
+    compile group: 'org.apache.spark', name: 'spark-catalyst'.scala()
+    compile group: 'org.apache.spark', name: 'spark-streaming'.scala()
+    compile group: 'org.apache.spark', name: 'spark-core'.scala()
+
+}

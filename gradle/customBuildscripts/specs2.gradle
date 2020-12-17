@@ -1,0 +1,12 @@
+/**
+ * Depends on customBuildscripts/scala.gradle
+ * Adds test dependencies for specs2.
+ *
+ * Try not to use specs2 in the future outside of spark integration tests
+ */
+
+dependencies {
+    testCompile group: 'org.specs2', name: 'specs2-core'.scala()
+    testCompile group: 'org.specs2', name: 'specs2-mock'.scala()
+    testCompile group: 'org.specs2', name: 'specs2-junit'.scala()
+}

@@ -1,0 +1,7 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+
+dependencies {
+    api(project(':box-crypto'))
+    api(project(':dpiceberg-api'))
+}

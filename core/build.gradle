@@ -1,0 +1,12 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+
+dependencies {
+    api(project(':dpiceberg-crypto'))
+    api(project(':dpiceberg-s3a'))
+    api(project(':aws-kms-sdk1'))
+    api(project(':aws-dynamodb-sdk1'))
+    api(project(':dpiceberg-api'))
+    api(group: 'org.apache.iceberg', name: 'iceberg-core')
+    testCompile(project(':box-crypto'))
+}

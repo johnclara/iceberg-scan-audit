@@ -1,0 +1,30 @@
+/**
+ * Common build script utils for all projects.
+ */
+
+// not sure why repositories has to be included, but it does
+ext.boxJfrog = { String repoName, String folder, repositories ->
+    repositories.maven {
+        url "https://box.jfrog.io/box/" + folder
+        name repoName
+        credentials {
+            username "${artifactory_user}"
+            password "${artifactory_password}"
+        }
+    }
+}
+
+/*** SET UP REPOSITORIES TO RESOLVE DEPENDENCIES ***/
+/**
+ * This is the order in which dependencies will try to be resolved.
+ *
+ * During the release process, it doesn't check any non-box repos.
+ */
+repositories {
+    boxJfrog('signedthirdparty', 'signedthirdpartymaven', it)
+    boxJfrog('releaseRepo', 'box-maven-releases', it)
+    boxJfrog('snapshotRepo', 'box-maven-snapshots', it)
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+}

@@ -1,0 +1,9 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
+apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
+
+dependencies {
+    api project(":aws-api")
+    api group: 'software.amazon.awssdk', name: 'dynamodb'
+    api group: 'com.box', name: 'data-platform-model_2.12'
+    api group: 'com.box.secrets', name: 'box-secrets-core_2.12'
+}
