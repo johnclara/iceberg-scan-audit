@@ -1,9 +1,0 @@
-apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
-
-dependencies {
-    api(project(":dpiceberg-core"))
-
-    testCompile group: 'com.box.dseschemas', name: 'cdc-credence', version: '1.0.2'
-    testCompile group: 'com.box.dseschemas', name: 'test1', version: '1.0.1'
-}

@@ -1,8 +1,0 @@
-apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
-
-dependencies {
-    api project(":aws-api")
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk-sts'
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine'
-}

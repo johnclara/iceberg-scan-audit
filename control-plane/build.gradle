@@ -1,9 +1,0 @@
-apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/integration-tests.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/specs2.gradle"
-
-dependencies {
-    compile(project(":dpiceberg-api"))
-    compile(project(":dpiceberg-core"))
-}

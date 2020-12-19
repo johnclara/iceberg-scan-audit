@@ -25,7 +25,7 @@ dependencies {
     testImplementation platform(project(':test-bom'))
 
     // helper methods (eg SerializableUtil)
-    testImplementation project(':dp-test-util')
+    testImplementation project(':test-util')
 
     testImplementation group: 'junit', name: 'junit'
     testImplementation group: 'org.mockito', name: 'mockito-core'
