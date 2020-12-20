@@ -65,15 +65,17 @@ Boolean useSymlinks = Files.exists(settingsDir.toPath().resolve("use_symlinks"))
 
 
 include 'bom'
-include 'test-bom'
-
 include 'util'
+
+include 'test-bom'
 include 'test-util'
 
 List<MockModule> mockModules = [
         new IcebergAddonModule(baseName: "catalog"),
+        new IcebergAddonModule(baseName: "source", scalaVersions: ["2.11"]),
+
         new IcebergAddonModule(baseName: "testkit"),
-        new IcebergAddonModule(baseName: "spark2", scalaVersions: ["2.11"]),
+        new IcebergAddonModule(baseName: "spark-testkit", scalaVersions: ["2.11"]),
 ]
 
 List<IcebergAddonModule> icebergAddonModules = [
@@ -82,13 +84,11 @@ List<IcebergAddonModule> icebergAddonModules = [
         //new IcebergAddonModule(baseName: "client"),
 ]
 
-/*
 includeCrossBuildModules(
-        'dpiceberg-client-integration-tests',
-        'client-integration-tests',
-        ['2.12'],
+        'spark2-mock-tests',
+        'spark2-mock-tests',
+        ['2.11'],
         useSymlinks)
-        */
 
 mockModules.each { mockModule ->
     def prefix = "mock-"

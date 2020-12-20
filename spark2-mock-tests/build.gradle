@@ -3,7 +3,7 @@ apply from: "${project.rootDir}/gradle/customBuildscripts/integration-tests.grad
 apply from: "${project.rootDir}/gradle/customBuildscripts/specs2.gradle"
 
 dependencies {
-    testCompile(project(":dpiceberg-spark2".scala()))
-
-    testCompile group: 'com.box.dataplatform', name: 'cdc-credence'.scala(), version: '0.11-SNAPSHOT'
+    testCompile(project(":mock-source".scala()))
+    testCompile(project(":mock-spark-testkit".scala()))
+    testCompile(project(":mock-testkit"))
 }

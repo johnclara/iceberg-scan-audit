@@ -1,0 +1,8 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
+
+dependencies {
+    api(project(":mock-source".scala()))
+    api(project(":mock-testkit"))
+    api(group: 'org.apache.spark', name: 'spark-sql'.scala())
+}
+

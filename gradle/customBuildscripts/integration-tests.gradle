@@ -4,6 +4,7 @@
  */
 
 test {
+    /*
     //for hadoop native libraries
     systemProperty 's3mock.root.dir', "${rootDir}/s3mock"
     // point to native libs
@@ -14,9 +15,11 @@ test {
     systemProperty 'java.security.egd', 'file:/dev/./urandom'
     // also create a workspace for temp files
     systemProperty 'java.io.tmpdir', "${rootDir}/s3tmp"
+     */
 }
 
 // repo which holds local dynamo. not sure if this is needed
+/*
 repositories {
     maven {
         url 'https://s3-us-west-2.amazonaws.com/dynamodb-local/release'
@@ -24,9 +27,8 @@ repositories {
     }
 }
 
+ */
 dependencies {
-    testCompile compile(project(':dpiceberg-testkit'))
-
-    // enforce a consistent jackson version compatible with spark 2 and s3mock (unfortunately)
+    // enforce a consistent jackson version compatible with spark2
     testImplementation enforcedPlatform(group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.9.10')
 }
