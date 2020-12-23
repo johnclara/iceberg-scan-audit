@@ -8,6 +8,7 @@ class MockModule {
 }
 
 class IcebergAddonModule {
+    String prefix = "iceberg-addon-"
     String baseName
     List<String> scalaVersions = null
     Boolean separateTestModule = false
@@ -63,32 +64,21 @@ void includeCrossBuildModules(
  */
 Boolean useSymlinks = Files.exists(settingsDir.toPath().resolve("use_symlinks"))
 
-
 include 'bom'
-include 'util'
-
 include 'test-bom'
-include 'test-util'
 
 List<MockModule> mockModules = [
-        new IcebergAddonModule(baseName: "catalog"),
-        new IcebergAddonModule(baseName: "source", scalaVersions: ["2.11"]),
-
-        new IcebergAddonModule(baseName: "testkit"),
-        new IcebergAddonModule(baseName: "spark-testkit", scalaVersions: ["2.11"]),
+        new MockModule(baseName: "catalog"),
+        new MockModule(baseName: "source", scalaVersions: ["2.11"]),
+        new MockModule(baseName: "testkit"),
+        new MockModule(baseName: "spark-testkit", scalaVersions: ["2.11"]),
 ]
 
 List<IcebergAddonModule> icebergAddonModules = [
-        new IcebergAddonModule(baseName: "catalog-lite"),
-        //new IcebergAddonModule(baseName: "crypto"),
-        //new IcebergAddonModule(baseName: "client"),
+        new IcebergAddonModule(baseName: 'catalog-lite'),
+        new IcebergAddonModule(baseName: 'spark2-sanity-tests', scalaVersions: ['2.11']),
+        new IcebergAddonModule(baseName: 'sanity-tests')
 ]
-
-includeCrossBuildModules(
-        'spark2-mock-tests',
-        'spark2-mock-tests',
-        ['2.11'],
-        useSymlinks)
 
 mockModules.each { mockModule ->
     def prefix = "mock-"
@@ -103,8 +93,7 @@ mockModules.each { mockModule ->
 }
 
 icebergAddonModules.each { icebergAddon ->
-    def prefix = "iceberg-addon-"
-    def moduleName = prefix + icebergAddon.baseName
+    def moduleName = icebergAddon.prefix + icebergAddon.baseName
     def relativePath = icebergAddon.baseName
 
     includeCrossBuildModules(
@@ -112,28 +101,4 @@ icebergAddonModules.each { icebergAddon ->
             relativePath,
             icebergAddon.scalaVersions,
             useSymlinks)
-
-    if (icebergAddon.separateTestModule) {
-        def testSuffix = "-mock-tests"
-        def testModuleName = moduleName + testSuffix
-        def testRelativePath = icebergAddon.baseName + testSuffix
-        includeCrossBuildModules(
-                testModuleName,
-                testRelativePath,
-                icebergAddon.separateTestModuleScalaVersions ?
-                        icebergAddon.separateTestModuleScalaVersions :
-                        icebergAddon.scalaVersions,
-                useSymlinks)
-    }
-
-    if (icebergAddon.spark2TestModule) {
-        def testSuffix = "-spark-tests"
-        def testModuleName = moduleName + testSuffix
-        def testRelativePath = icebergAddon.baseName + testSuffix
-        includeCrossBuildModules(
-                testModuleName,
-                testRelativePath,
-                icebergAddon.scalaVersions,
-                useSymlinks)
-    }
 }

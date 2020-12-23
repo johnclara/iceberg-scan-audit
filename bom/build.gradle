@@ -9,7 +9,7 @@ javaPlatform {
 /**
  * Versions for multi module projects without a bom
  */
-String icebergVersion = "0.2.5-RELEASE"
+String icebergVersion = "0.10.0"
 String sparkVersion = "2.4.0"
 
 String slf4jVersion = "1.7.25"

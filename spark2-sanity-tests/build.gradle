@@ -1,9 +1,10 @@
 apply from: "${project.rootDir}/gradle/customBuildscripts/scala.gradle"
-apply from: "${project.rootDir}/gradle/customBuildscripts/integration-tests.gradle"
 apply from: "${project.rootDir}/gradle/customBuildscripts/specs2.gradle"
 
 dependencies {
     testCompile(project(":mock-source".scala()))
     testCompile(project(":mock-spark-testkit".scala()))
     testCompile(project(":mock-testkit"))
+
+    testImplementation enforcedPlatform(group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.9.10')
 }

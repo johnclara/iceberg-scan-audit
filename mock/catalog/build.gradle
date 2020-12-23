@@ -3,5 +3,4 @@ apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
 dependencies {
     api("org.apache.iceberg:iceberg-core")
     api project(":iceberg-addon-catalog-lite")
-    api project(":util")
 }
