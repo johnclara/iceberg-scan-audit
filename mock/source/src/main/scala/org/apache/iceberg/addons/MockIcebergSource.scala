@@ -1,4 +1,4 @@
-package com.box.dataplatform.iceberg
+package org.apache.iceberg.addons
 
 import java.util.function.Supplier
 

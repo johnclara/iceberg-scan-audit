@@ -1,104 +1,115 @@
 // used for symlinking
 import java.nio.file.*
 
-class MockModule {
-    String baseName
-    String sdkVersion = null
-    List<String> scalaVersions = null
+interface Module {
+    String baseName()
+    List<String> scalaVersions()
+    String prefix()
+    String pathPrefix()
 }
 
-class IcebergAddonModule {
-    String prefix = "iceberg-addon-"
+class MockModule implements Module {
     String baseName
     List<String> scalaVersions = null
-    Boolean separateTestModule = false
-    List<String> separateTestModuleScalaVersions = null
-    Boolean spark2TestModule = false
+
+    @Override
+    String baseName() {
+        return baseName
+    }
+
+    @Override
+    List<String> scalaVersions() {
+        return scalaVersions
+    }
+
+    @Override
+    String prefix() {
+        return "mock-"
+    }
+
+    @Override
+    String pathPrefix() {
+        return "mock/"
+    }
 }
 
+class IcebergAddonModule implements Module {
+    String baseName
+    List<String> scalaVersions = null
+
+    @Override
+    String baseName() {
+        return baseName
+    }
+
+    @Override
+    List<String> scalaVersions() {
+        return scalaVersions
+    }
+
+    @Override
+    String prefix() {
+        return 'iceberg-addons' + "-"
+    }
+
+    @Override
+    String pathPrefix() {
+        return ""
+    }
+}
+
+void includeModule(String moduleName, String sourcePath) {
+    logger.info("Including module ${moduleName} at ${sourcePath}")
+    include moduleName
+    project(":${moduleName}").setProjectDir(new File(settingsDir, sourcePath))
+}
 
 void includeCrossBuildModules(
         String baseModuleName,
-        String relativePath,
-        List<String> scalaVersions,
-        Boolean useSymlinks) {
-
+        String sourcePath,
+        List<String> scalaVersions) {
     if (scalaVersions == null) {
-        def moduleName = baseModuleName
-
-        include moduleName
-        project(":${moduleName}").setProjectDir(new File(settingsDir, relativePath))
+        includeModule(baseModuleName, sourcePath)
     } else {
-        def moduleNeedsSymlink = useSymlinks && scalaVersions.size() > 1
-        scalaVersions.each { scalaVersion ->
+        /**
+         * Intellij can't handle multiple modules with the same source. The following method is used to suggests versions during development.
+         *
+         * Provide a comma delimited String with scala versions in order of preference.
+         * For modules with multiple scala versions, if any of them are in the list, then only the one with highest preference
+         * will be included. If a module has multiple scala versions, but non of them are in the list then all will be included.
+         */
+        List<String> preferredScalaVersions = (properties.preferredScalaVersions == null) ? null : properties.preferredScalaVersions.toString().split(',')
+        boolean crossBuiltModule = scalaVersions.size() > 1
+        String preferredScalaVersion = (crossBuiltModule && preferredScalaVersions != null) ? preferredScalaVersions.find {v -> scalaVersions.contains(v) } : null
+        List<String> includedScalaVersions = (preferredScalaVersion != null) ? [preferredScalaVersion] : scalaVersions
+
+        includedScalaVersions.each { scalaVersion ->
             def moduleName = baseModuleName + "_" + scalaVersion
-
-            /**
-             * If useSymlinks, add a symlink from an adjacent file with version to the main directory.
-             * This tricks intellij into thinking that the modules don't have overlapping content roots.
-             * Without this, intellij will just get rid of some of the modules.
-             *
-             * If not useSymlinks, delete all the existing ones
-             */
-            def symlinkPath = relativePath + "_" + scalaVersion
-            def link = settingsDir.toPath().resolve(symlinkPath)
-
-            if (moduleNeedsSymlink && scalaVersions.size() > 1 && !Files.isSymbolicLink(link)) {
-                Files.createSymbolicLink(link, settingsDir.toPath().resolve(relativePath))
-            } else if (!moduleNeedsSymlink && Files.exists(link) && Files.isSymbolicLink(link)) {
-                Files.delete(link)
-            }
-
-            def contentRoot = (moduleNeedsSymlink) ? symlinkPath : relativePath
-
-            include moduleName
-            project(":${moduleName}").setProjectDir(new File(settingsDir, contentRoot))
+            includeModule(moduleName, sourcePath)
         }
     }
 
 }
 
-/**
- * Using symlinks will let intellij process this repo.
- * Flag that you want symlinks by touching use_symlinks in the root directory.
- */
-Boolean useSymlinks = Files.exists(settingsDir.toPath().resolve("use_symlinks"))
-
-include 'bom'
-include 'test-bom'
-
-List<MockModule> mockModules = [
+List<Module> modules = [
         new MockModule(baseName: "catalog"),
         new MockModule(baseName: "source", scalaVersions: ["2.11"]),
         new MockModule(baseName: "testkit"),
         new MockModule(baseName: "spark-testkit", scalaVersions: ["2.11"]),
-]
-
-List<IcebergAddonModule> icebergAddonModules = [
+        new IcebergAddonModule(baseName: 'bom'),
+        new IcebergAddonModule(baseName: 'test-bom'),
         new IcebergAddonModule(baseName: 'catalog-lite'),
         new IcebergAddonModule(baseName: 'spark2-sanity-tests', scalaVersions: ['2.11']),
         new IcebergAddonModule(baseName: 'sanity-tests')
 ]
 
-mockModules.each { mockModule ->
-    def prefix = "mock-"
-    def moduleName = prefix + mockModule.baseName
-    def relativePath = "mock/" + mockModule.baseName
+modules.each { module ->
+    String moduleName = module.prefix() + module.baseName()
+    String relativePath = module.pathPrefix() + module.baseName()
 
     includeCrossBuildModules(
             moduleName,
             relativePath,
-            mockModule.scalaVersions,
-            useSymlinks)
-}
-
-icebergAddonModules.each { icebergAddon ->
-    def moduleName = icebergAddon.prefix + icebergAddon.baseName
-    def relativePath = icebergAddon.baseName
-
-    includeCrossBuildModules(
-            moduleName,
-            relativePath,
-            icebergAddon.scalaVersions,
-            useSymlinks)
+            module.scalaVersions()
+    )
 }

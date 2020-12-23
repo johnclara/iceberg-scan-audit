@@ -17,4 +17,4 @@
 # under the License.
 #
 
-com.box.dataplatform.iceberg.MockIcebergSource
+org.apache.iceberg.addons.MockIcebergSource

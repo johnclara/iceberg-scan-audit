@@ -3,7 +3,7 @@ package org.apache.iceberg.addons.testkit;
 import org.apache.iceberg.Table;
 import org.apache.iceberg.addons.mock.MockCatalog;
 import org.apache.iceberg.addons.mock.MockContextId;
-import org.apache.iceberg.addons.cataloglite.TableSpec;
+import org.apache.iceberg.addons.cataloglite.tablespec.TableSpec;
 import org.apache.iceberg.catalog.Catalog;
 import org.apache.iceberg.catalog.TableIdentifier;
 

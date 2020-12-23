@@ -1,11 +1,11 @@
-package com.box.dataplatform.iceberg
+package org.apache.iceberg.addons.sanity.spark
 
-import org.apache.spark.sql.SaveMode
-import org.specs2.matcher.MustThrownMatchers
-import org.specs2.specification.core.SpecStructure
 import org.apache.iceberg.addons.spark.testkit.Testkit
 import org.apache.iceberg.addons.spark.testkit.sampletables.SimpleRecord
 import org.apache.iceberg.addons.testkit.sampletables.SimpleTableSpec
+import org.apache.spark.sql.SaveMode
+import org.specs2.matcher.MustThrownMatchers
+import org.specs2.specification.core.SpecStructure
 
 class SimpleReadWriteTest extends IcebergSparkTestBase with MustThrownMatchers {
   override def is: SpecStructure = s2"""
@@ -14,11 +14,12 @@ class SimpleReadWriteTest extends IcebergSparkTestBase with MustThrownMatchers {
   """
 
   import Testkit._
+
   import scala.collection.JavaConverters._
 
   case class TestEnv() {
     val ss = spark
-    implicit val mck = contextKey
+    implicit val mck = contextId
     import ss.implicits._
 
     def readWrite = {

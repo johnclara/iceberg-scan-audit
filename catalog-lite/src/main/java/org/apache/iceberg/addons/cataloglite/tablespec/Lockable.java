@@ -1,4 +1,4 @@
-package org.apache.iceberg.addons.cataloglite;
+package org.apache.iceberg.addons.cataloglite.tablespec;
 
 import java.io.Serializable;
 

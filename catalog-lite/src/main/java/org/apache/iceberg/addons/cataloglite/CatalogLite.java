@@ -56,7 +56,7 @@ public class CatalogLite extends BaseMetastoreCatalog {
   }
 
   @Override
-  protected String name() {
+  public String name() {
     return "lite";
   }
 }

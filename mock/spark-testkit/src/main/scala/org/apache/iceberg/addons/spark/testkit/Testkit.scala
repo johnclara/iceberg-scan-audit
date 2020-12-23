@@ -1,14 +1,15 @@
 package org.apache.iceberg.addons.spark.testkit
 
-import com.box.dataplatform.iceberg.MockIcebergSource
 import org.apache.iceberg.PartitionSpec
-import org.apache.iceberg.addons.cataloglite.TableSpec
 import org.apache.iceberg.addons.mock.MockContextId
 import org.apache.iceberg.addons.spark.testkit.sampletables.SimpleRecord
 import org.apache.iceberg.addons.testkit.sampletables.SimpleTableSpec
 import org.apache.iceberg.addons.testkit.{SampleTableSpec, TableIdentifierUtil}
 import org.apache.iceberg.catalog.TableIdentifier
 import java.util.function.{Function => JavaFunction}
+
+import org.apache.iceberg.addons.MockIcebergSource
+import org.apache.iceberg.addons.cataloglite.tablespec.TableSpec
 
 import scala.reflect.runtime.universe.TypeTag
 import org.apache.iceberg.spark.SparkSchemaUtil

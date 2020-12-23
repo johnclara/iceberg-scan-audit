@@ -1,4 +1,4 @@
-package org.apache.iceberg.addons.cataloglite;
+package org.apache.iceberg.addons.cataloglite.tablespec;
 
 import org.apache.iceberg.PartitionSpec;
 import org.apache.iceberg.Schema;
@@ -121,5 +121,17 @@ public class TableSpec implements Serializable {
         partitionSpec.get(),
         properties.get()
     );
+  }
+
+  public Schema schema() {
+    return schema;
+  }
+
+  public Lockable<PartitionSpec> partitionSpec() {
+    return partitionSpec;
+  }
+
+  public Lockable<HashMap<String, String>> properties() {
+    return properties;
   }
 }

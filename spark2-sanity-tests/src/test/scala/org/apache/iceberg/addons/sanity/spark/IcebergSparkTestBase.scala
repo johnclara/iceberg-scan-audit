@@ -1,6 +1,7 @@
-package com.box.dataplatform.iceberg
-import org.apache.iceberg.addons.mock.{MockCatalog, MockContextId}
-import org.apache.iceberg.addons.testkit.MockContextKeyUtil
+package org.apache.iceberg.addons.sanity.spark
+
+import org.apache.iceberg.addons.mock.{MockContext, MockContextId}
+import org.apache.iceberg.addons.testkit.MockContextIdUtil
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.internal.SQLConf
 import org.apache.spark.sql.internal.SQLConf.PartitionOverwriteMode
@@ -11,10 +12,10 @@ import org.specs2.specification.core.SpecStructure
 
 class IcebergSparkTestBase extends SpecificationWithJUnit with MustThrownMatchers with BeforeAfterAll {
   protected var spark: SparkSession = _
-  protected var contextKey: MockContextId = _
+  protected var contextId: MockContextId = _
 
   override def beforeAll(): Unit = {
-    contextKey = MockContextKeyUtil.newContextKey();
+    contextId = MockContextIdUtil.newContextId();
     val spark_hadoop = "spark.hadoop."
     spark = SparkSession.builder
       .master("local[2]")
@@ -26,7 +27,7 @@ class IcebergSparkTestBase extends SpecificationWithJUnit with MustThrownMatcher
   }
 
   override def afterAll(): Unit = {
-    MockCatalog.clearContext(contextKey)
+    MockContext.clearContext(contextId)
     spark.stop()
   }
 

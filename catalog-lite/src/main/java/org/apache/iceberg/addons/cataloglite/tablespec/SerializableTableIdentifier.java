@@ -1,4 +1,4 @@
-package org.apache.iceberg.addons.cataloglite;
+package org.apache.iceberg.addons.cataloglite.tablespec;
 
 import org.apache.iceberg.catalog.Namespace;
 import org.apache.iceberg.catalog.TableIdentifier;

@@ -6,23 +6,18 @@ apply from: "${rootDir}/gradle/customBuildscripts/util.gradle"
 apply plugin: 'java-library'
 apply plugin: 'com.github.sherter.google-java-format'
 apply plugin: 'dev.jacomet.logging-capabilities'
-apply plugin: 'jacoco'
-apply plugin: 'org.sonarqube'
-
-// register as a java project for use in the root project
-gradle.ext.javaProjects.add(project)
 
 /*** DEFAULT DEPENDENCIES ***/
 
 dependencies {
     // constrains and provides recommendations for dependency versions
-    implementation enforcedPlatform(project(':bom'))
+    implementation enforcedPlatform(project(":${'iceberg-addons'}-bom"))
 
     /**
      * Common testing framework
      */
     // provides recommendations for test dependency versions
-    testImplementation platform(project(':test-bom'))
+    testImplementation platform(project(":${'iceberg-addons'}-test-bom"))
 
     testImplementation group: 'junit', name: 'junit'
     testImplementation group: 'org.mockito', name: 'mockito-core'
@@ -67,18 +62,6 @@ test {
         showCauses true
         showStackTraces true
     }
-}
-
-sonarqube {
-    properties {
-        property "sonar.jacoco.reportPaths", gradle.ext.allTestCoverageFile
-    }
-}
-
-//project.tasks["sonarqube"].dependsOn rootProject.tasks["jacocoMergeAll"]
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
 }
 
 /*** JAVA CONFIG FOR INTELLIJ ***/

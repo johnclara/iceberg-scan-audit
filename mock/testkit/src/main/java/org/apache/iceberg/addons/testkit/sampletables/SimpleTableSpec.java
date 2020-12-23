@@ -1,8 +1,7 @@
 package org.apache.iceberg.addons.testkit.sampletables;
 
-import org.apache.iceberg.PartitionSpec;
 import org.apache.iceberg.Schema;
-import org.apache.iceberg.addons.cataloglite.TableSpec;
+import org.apache.iceberg.addons.cataloglite.tablespec.TableSpec;
 import org.apache.iceberg.addons.testkit.SampleTableSpec;
 import org.apache.iceberg.types.Types;
 

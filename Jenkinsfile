@@ -59,10 +59,6 @@ pipeline {
                     make checkstyle
                     make report
                 '''
-                publishReport([filePath: "build/reports/jacoco/jacocoAggregateReport/html/index.html", name: "Coverage Report"])
-                sh '''
-                    make sonarqube
-                '''
               }
               post {
                 always {

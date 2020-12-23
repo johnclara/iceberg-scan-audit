@@ -1,0 +1,7 @@
+apply from: "${project.rootDir}/gradle/customBuildscripts/java.gradle"
+
+dependencies {
+    testCompile(project(":mock-testkit"))
+    testCompile(group: 'org.apache.iceberg', name: 'iceberg-data', classifier: 'tests')
+    testCompile(group: 'org.apache.iceberg', name: 'iceberg-api', classifier: 'tests')
+}

@@ -1,13 +1,13 @@
-package com.box.dataplatform.iceberg
+package org.apache.iceberg.addons.sanity.spark
 
-import org.apache.iceberg.{PartitionSpec, Schema}
-import org.apache.iceberg.addons.cataloglite.TableSpec
-import org.apache.iceberg.addons.spark.testkit.{TaggedSampleTableSpec, Testkit}
+import org.apache.iceberg.addons.cataloglite.tablespec.TableSpec
 import org.apache.iceberg.addons.spark.testkit.sampletables.SimpleRecord
+import org.apache.iceberg.addons.spark.testkit.{TaggedSampleTableSpec, Testkit}
 import org.apache.iceberg.addons.testkit.SampleTableSpec
 import org.apache.iceberg.addons.testkit.sampletables.SimpleTableSpec
 import org.apache.iceberg.types.Types
 import org.apache.iceberg.types.Types.NestedField.optional
+import org.apache.iceberg.{PartitionSpec, Schema}
 import org.apache.spark.sql.SaveMode
 import org.specs2.matcher.MustThrownMatchers
 import org.specs2.specification.core.SpecStructure
@@ -37,13 +37,14 @@ class ManyTypedTablesTest extends IcebergSparkTestBase with MustThrownMatchers {
         read and write with more than one TaggedTableSpec in scope ${TestEnv().readWrite}
   """
 
-  import Testkit._
   import MoreTableSpecs._
+  import Testkit._
 
   case class TestEnv() {
     val ss = spark
-    implicit val mck = contextKey
+    implicit val mck = contextId
     import ss.implicits._
+
     import scala.collection.JavaConverters._
 
     def readWrite = {

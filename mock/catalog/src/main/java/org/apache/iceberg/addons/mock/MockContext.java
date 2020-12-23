@@ -11,6 +11,9 @@ public class MockContext implements Serializable {
   public static MockContext getContext(MockContextId contextId) {
     return MockContext.mockContexts.computeIfAbsent(contextId, (id) -> new MockContext(id, new MockObjectStore(id), new MockMetastore(id)));
   }
+  public static boolean clearContext(MockContextId mockContextId) {
+    return MockContext.mockContexts.remove(mockContextId) != null;
+  }
 
   private final MockContextId contextKey;
   private final MockObjectStore objectStore;

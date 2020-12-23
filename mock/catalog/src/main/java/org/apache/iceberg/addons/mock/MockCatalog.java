@@ -5,10 +5,6 @@ import org.apache.iceberg.addons.cataloglite.io.ObjectStore;
 import org.apache.iceberg.addons.cataloglite.metastore.Metastore;
 
 public class MockCatalog extends CatalogLite {
-  public static boolean clearContext(MockContextId mockContextId) {
-    return MockContext.mockContexts.remove(mockContextId) != null;
-  }
-
   public MockCatalog(Metastore metastore, ObjectStore objectStore) {
     super(metastore, objectStore);
   }
