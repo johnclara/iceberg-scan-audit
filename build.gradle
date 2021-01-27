@@ -2,34 +2,10 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-        maven {
-            url "https://box.jfrog.io/box/box-maven-releases"
-            credentials {
-                username "${artifactory_user}"
-                password "${artifactory_password}"
-            }
-        }
-        maven {
-            url "https://box.jfrog.io/box/box-maven-snapshots"
-            credentials {
-                username "${artifactory_user}"
-                password "${artifactory_password}"
-            }
-        }
-        maven {
-            url "https://box.jfrog.io/box/signedthirdpartymaven"
-            credentials {
-                username "${artifactory_user}"
-                password "${artifactory_password}"
-            }
-        }
         mavenLocal()
     }
 
     dependencies {
-        // to sign dependencies before publish
-        classpath group: 'com.box.monaco', name: 'signature-verification', version: signatureVerificationVersion
-
         // to create chadow jars
         classpath group: 'com.github.jengelman.gradle.plugins', name: 'shadow', version: shadowVersion
 

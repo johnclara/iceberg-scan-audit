@@ -99,6 +99,7 @@ List<Module> modules = [
         new IcebergAddonModule(baseName: 'bom'),
         new IcebergAddonModule(baseName: 'test-bom'),
         new IcebergAddonModule(baseName: 'catalog-lite'),
+        new IcebergAddonModule(baseName: 'scan-audit'),
         new IcebergAddonModule(baseName: 'spark2-sanity-tests', scalaVersions: ['2.11']),
         new IcebergAddonModule(baseName: 'sanity-tests')
 ]

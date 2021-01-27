@@ -1,0 +1,5 @@
+package org.apache.iceberg.addons.scanaudit;
+
+public enum EvaluatorType {
+  MANIFEST_PARTITION, MANIFEST_PREDICATE, DATAFILE_PARTITION, DATAFILE_METRICS, PARTITION_REEVALUATE, PREDICATE_REEVALUATE
+}

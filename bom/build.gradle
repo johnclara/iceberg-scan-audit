@@ -1,5 +1,4 @@
 apply plugin: 'java-platform'
-apply from: "${project.rootDir}/gradle/customBuildscripts/publishing.gradle"
 
 // allows inclusion of external boms
 javaPlatform {
